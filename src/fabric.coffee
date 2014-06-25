@@ -43,18 +43,30 @@ spawn = (robot, msg, cmd, args) ->
     msg.send "exited: #{code}"
 
 buildArgs = (task, host) ->
-  return [
-    "-i#{HUBOT_FABRIC_CONFIG.auth}",
-    "-f#{HUBOT_FABRIC_CONFIG.file}",
-    "#{host}",
-    "-u#{HUBOT_FABRIC_CONFIG.user}",
-    "-p#{HUBOT_FABRIC_CONFIG.pass}",
-    task
-  ]
+  c = HUBOT_FABRIC_CONFIG
+  args = []
+
+  args.push "-i#{c.auth}" if c.auth?
+  args.push "-f#{c.file}" if c.file?
+  args.push "#{host}"
+  args.push "-u#{c.user}" if c.user?
+  args.push "-p#{c.pass}" if c.pass?
+  args.push task
+
+  return args
 
 buildCmd = (task, host) ->
   c = HUBOT_FABRIC_CONFIG
-  return "#{c.path} -f#{c.file} #{host} -u#{c.user} -p#{c.pass} #{task}"
+
+  cmd = "#{c.path}"
+  cmd += " -i#{c.auth}" if c.auth?
+  cmd += " -f#{c.file}" if c.file?
+  cmd += " #{host}"
+  cmd += " -u#{c.user}" if c.user?
+  cmd += " -p#{c.pass}" if c.pass?
+  cmd += " #{task}"
+
+  return cmd
 
 executeTask = (robot, msg, method, task, host) ->
   if task not in HUBOT_FABRIC_CONFIG.tasks
