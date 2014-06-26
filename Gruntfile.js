@@ -24,7 +24,15 @@ module.exports = function(grunt) {
     watch: {
       files: ['Gruntfile.js', 'test/**/*.coffee'],
       tasks: ['test']
-    }
+    },
+    coffeelint: {
+      app: ['src/*.coffee', 'test/*.coffee'],
+      options: {
+        'max_line_length': {
+          'level': 'ignore'
+        }
+      }
+    },
   });
 
   grunt.event.on('watch', function(action, filepath, target) {
@@ -36,5 +44,5 @@ module.exports = function(grunt) {
 
   grunt.registerTask('test', ['mochaTest']);
   grunt.registerTask('test:watch', ['watch']);
-  grunt.registerTask('default', ['test']);
+  grunt.registerTask('default', ['coffeelint', 'test']);
 };
