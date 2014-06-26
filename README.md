@@ -2,7 +2,7 @@
 
 Execute Fabric tasks from Hubot.
 
-See [`src/fabric.coffee`](src/fabric.coffee) for full documentation.
+See [`src/fabric.coffee`](https://github.com/appneta/hubot-fabric/tree/master/src) for full documentation.
 
 ## Installation
 
