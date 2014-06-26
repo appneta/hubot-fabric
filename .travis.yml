@@ -4,4 +4,8 @@ node_js:
   - "0.10"
 before_install: npm install -g grunt-cli
 notifications:
-  email: false
+  email:
+    recipients:
+      - driti@appneta.com
+    on_success: change
+    on_failure: always
