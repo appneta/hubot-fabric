@@ -5,9 +5,10 @@
 #   HUBOT_FABRIC_CONFIG
 #
 # Commands:
-#   hubot fabric -Hhost.example.com my_task
-#   hubot fabric exec -Hhost.example.com my_task:'arg1,arg2'
-#   hubot fabric spawn -Hhost.example.com my_task
+#   hubot fabric -Hhost.example.com uptime - execute the uptime fabric task on host.example.com
+#   hubot fabric exec -Hhost.example.com uptime:'arg1,arg2' - execute the uptime fabric task with 2 arguments on host.example.com
+#   hubot fabric spawn -Hhost.example.com uptime - asynchronously execute the uptime fabric task on host.example.com
+#   hubot fabric tasks - list fabric tasks that are executable
 #
 # Notes:
 #   HUBOT_FABRIC_CONFIG expects a JSON object structured like this:
@@ -39,8 +40,9 @@
 #   - "prefix" (String) (Optional) Used to format fabric's output using a message
 #     formatter that is compatible with your Hubot adapter.
 #
-#     For instance, HipChat supports "/quote" to display messages in a fixed-width
-#     format. Thus, you can set "prefix": "/quote " to get cleaner output.
+#     For instance, HipChat supports "/quote " to display messages in a fixed-width
+#     format. Thus, you can set "prefix": "/quote " to apply this formatter to
+#     fabric's output.
 #   - "role" (String) (Optional) Uses the [auth.coffee][1] module for restricting
 #     access via user configurable roles.
 #
