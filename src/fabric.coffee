@@ -133,8 +133,8 @@ executeTask = (robot, msg, method, task, host) ->
   role = HUBOT_FABRIC_CONFIG.role
 
   if not userHasRole(user, role, robot)
-     msg.send "Access denied. You must have this role to use this command: #{role}"
-     return
+    msg.send "Access denied. You must have this role to use this command: #{role}"
+    return
 
   if method is 'exec'
     cmd = buildCmd(task, host)
