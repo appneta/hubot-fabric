@@ -4,36 +4,35 @@
   "version": "0.1.2",
   "author": "Dan Riti <dmriti@gmail.com>",
   "license": "MIT",
-
-  "keywords": ["hubot","hubot-scripts","fabric","chatops"],
-
+  "keywords": [
+    "hubot",
+    "hubot-scripts",
+    "fabric",
+    "chatops"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/appneta/hubot-fabric.git"
   },
-
   "bugs": {
     "url": "https://github.com/appneta/hubot-fabric/issues"
   },
-
   "dependencies": {
     "coffee-script": "~1.6"
   },
-
   "devDependencies": {
-    "mocha": "*",
     "chai": "*",
-    "sinon-chai": "*",
-    "sinon": "*",
+    "grunt-coffeelint": "0.0.10",
+    "grunt-contrib-watch": "~0.5.3",
     "grunt-mocha-test": "~0.7.0",
     "grunt-release": "~0.6.0",
     "matchdep": "~0.1.2",
-    "grunt-contrib-watch": "~0.5.3"
+    "mocha": "*",
+    "sinon": "*",
+    "sinon-chai": "*"
   },
-
   "main": "index.coffee",
-
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt"
   }
 }
