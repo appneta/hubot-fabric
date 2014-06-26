@@ -5,8 +5,9 @@
 #   HUBOT_FABRIC_CONFIG
 #
 # Commands:
-#   hubot fabric my_task -Hhost.example.com
-#   hubot fabric (exec|spawn) my_task -Hhost.example.com
+#   hubot fabric -Hhost.example.com my_task
+#   hubot fabric exec -Hhost.example.com my_task:'arg1,arg2'
+#   hubot fabric spawn -Hhost.example.com my_task
 #
 # Notes:
 #   None
@@ -68,8 +69,12 @@ buildCmd = (task, host) ->
 
   return cmd
 
+isTaskValid = (task) ->
+  result = task.split(':')
+  return result[0] in HUBOT_FABRIC_CONFIG.tasks
+
 executeTask = (robot, msg, method, task, host) ->
-  if task not in HUBOT_FABRIC_CONFIG.tasks
+  if not isTaskValid(task)
     msg.send "Unauthorized task: #{task}"
     return
 
@@ -83,10 +88,10 @@ executeTask = (robot, msg, method, task, host) ->
 
 module.exports = (robot) ->
 
-  robot.respond /fabric (exec|spawn)? ?(.+) (-H)(.+)?/i, (msg) ->
+  robot.respond /fabric (exec|spawn)? ?(-H) ?([\w.\-_]+) (.+)/i, (msg) ->
     method = msg.match[1] ||= 'exec'
-    task = msg.match[2]
-    host = msg.match[3] + msg.match[4]
+    host = msg.match[2] + msg.match[3]
+    task = msg.match[4]
     executeTask(robot, msg, method, task, host)
 
   robot.respond /fabric tasks/i, (msg) ->
