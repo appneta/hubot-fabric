@@ -1,7 +1,7 @@
 {
   "name": "hubot-fabric",
   "description": "Execute Fabric tasks from Hubot",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Dan Riti <dmriti@gmail.com>",
   "license": "MIT",
 
@@ -9,11 +9,11 @@
 
   "repository": {
     "type": "git",
-    "url": "git://github.com/hubot-scripts/hubot-fabric.git"
+    "url": "git://github.com/appneta/hubot-fabric.git"
   },
 
   "bugs": {
-    "url": "https://github.com/hubot-scripts/hubot-fabric/issues"
+    "url": "https://github.com/appneta/hubot-fabric/issues"
   },
 
   "dependencies": {
