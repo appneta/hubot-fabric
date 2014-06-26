@@ -2,7 +2,7 @@
 
 Execute Fabric tasks from Hubot.
 
-See [`src/fabric.coffee`](https://github.com/appneta/hubot-fabric/blob/master/src/fabric.coffee) for full documentation.
+[![Build Status](https://travis-ci.org/appneta/hubot-fabric.svg?branch=master)](https://travis-ci.org/appneta/hubot-fabric)
 
 ## Installation
 
@@ -15,6 +15,10 @@ Then add **hubot-fabric** to your `external-scripts.json`:
 ```json
 ["hubot-fabric"]
 ```
+
+## Documentation
+
+See [`src/fabric.coffee`](https://github.com/appneta/hubot-fabric/blob/master/src/fabric.coffee) for full documentation.
 
 ## Sample Interaction
 
