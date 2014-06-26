@@ -10,7 +10,43 @@
 #   hubot fabric spawn -Hhost.example.com my_task
 #
 # Notes:
-#   None
+#   HUBOT_FABRIC_CONFIG expects a JSON object structured like this:
+#
+#   {
+#     "path": "/my/virtualenv/bin/fab",
+#     "file": "/full/path/to/my/fabfile.py",
+#     "auth": "/full/path/to/my/ssh-key.pem",
+#     "user": "user",
+#     "pass": "pass",
+#     "tasks": [
+#       "df",
+#       "free",
+#       "w",
+#       "uptime",
+#       "top"
+#     ],
+#     "prefix": "",
+#     "role": "fabric"
+#   }
+#
+#   - "path" (String) Path to the fabric executable script
+#   - "file" (String) Path to the fabric file
+#   - "auth" (String) Path to the SSH private key file
+#   - "user" (String) (Optional) User name to use when connecting to remote hosts
+#   - "pass" (String) (Optional) Password to use when connection to remote hosts
+#   - "tasks" (Array) Strings of fabric tasks that can be executed. Set to ["*"]
+#     if you do not wish to limit which tasks can be executed.
+#   - "prefix" (String) (Optional) Used to format fabric's output using a message
+#     formatter that is compatible with your Hubot adapter.
+#
+#     For instance, HipChat supports "/quote" to display messages in a fixed-width
+#     format. Thus, you can set "prefix": "/quote " to get cleaner output.
+#   - "role" (String) (Optional) Uses the [auth.coffee][1] module for restricting
+#     access via user configurable roles.
+#
+#     You can set "role" to "*" if you don't care about restricting access.
+#
+#   [1]: https://github.com/github/hubot/blob/master/src/scripts/auth.coffee
 #
 # Author:
 #   danriti
