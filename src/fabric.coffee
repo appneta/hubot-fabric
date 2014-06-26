@@ -78,10 +78,23 @@ isTaskValid = (task) ->
   result = task.split(':')
   return result[0] in HUBOT_FABRIC_CONFIG.tasks
 
+userHasRole = (user, role, robot) ->
+  if role is '*'
+    return true
+
+  return robot.auth.hasRole(user, role)
+
 executeTask = (robot, msg, method, task, host) ->
   if not isTaskValid(task)
     msg.send "Unauthorized task: #{task}"
     return
+
+  user = msg.message.user
+  role = HUBOT_FABRIC_CONFIG.role
+
+  if not userHasRole(user, role, robot)
+     msg.send "Access denied. You must have this role to use this command: #{role}"
+     return
 
   if method is 'exec'
     cmd = buildCmd(task, host)
