@@ -34,10 +34,10 @@ spawn = (robot, msg, cmd, args) ->
   p = child_process.spawn cmd, args
 
   p.stdout.on 'data', (data) ->
-    msg.send data
+    msg.send data.toString()
 
   p.stderr.on 'data', (data) ->
-    msg.send data
+    msg.send data.toString()
 
   p.on 'close', (code) ->
     msg.send "exited: #{code}"
