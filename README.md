@@ -8,7 +8,7 @@ See [`src/fabric.coffee`](src/fabric.coffee) for full documentation.
 
 In hubot project repo, run:
 
-`npm install hubot-fabric --save`
+`npm install git://github.com/appneta/hubot-fabric.git --save`
 
 Then add **hubot-fabric** to your `external-scripts.json`:
 
