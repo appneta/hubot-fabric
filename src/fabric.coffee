@@ -1,5 +1,5 @@
 # Description
-#   Execute Fabric tasks from Hubot.
+#   Execute Fabric tasks from Hubot
 #
 # Configuration:
 #   HUBOT_FABRIC_CONFIG
