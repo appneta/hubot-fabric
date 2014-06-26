@@ -75,7 +75,7 @@ buildCmd = (task, host) ->
   return cmd
 
 isTaskValid = (task) ->
-  if HUBOT_FABRIC_CONFIG.tasks is '*'
+  if '*' in HUBOT_FABRIC_CONFIG.tasks
     return true
   result = task.split(':')
   return result[0] in HUBOT_FABRIC_CONFIG.tasks
