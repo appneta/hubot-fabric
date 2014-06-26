@@ -22,11 +22,11 @@ HUBOT_FABRIC_CONFIG = JSON.parse process.env.HUBOT_FABRIC_CONFIG
 exec = (robot, msg, cmd) ->
   p = child_process.exec cmd, (error, stdout, stderr) ->
     if stdout?.length
-      msg.send stdout
+      msg.send formatOutput(stdout)
     if stderr?.length
-      msg.send stderr
+      msg.send formatOutput(stderr)
     if error isnt null
-      msg.send error
+      msg.send formatOutput(error)
 
   p.on 'exit', (code) ->
     console.log("exited: #{code}")
@@ -35,13 +35,18 @@ spawn = (robot, msg, cmd, args) ->
   p = child_process.spawn cmd, args
 
   p.stdout.on 'data', (data) ->
-    msg.send data.toString()
+    msg.send formatOutput(data.toString())
 
   p.stderr.on 'data', (data) ->
-    msg.send data.toString()
+    msg.send formatOutput(data.toString())
 
   p.on 'close', (code) ->
-    msg.send "exited: #{code}"
+    msg.send formatOutput("exited: #{code}")
+
+formatOutput = (text) ->
+  if HUBOT_FABRIC_CONFIG.prefix?
+    return HUBOT_FABRIC_CONFIG.prefix + text
+  return text
 
 buildArgs = (task, host) ->
   c = HUBOT_FABRIC_CONFIG
