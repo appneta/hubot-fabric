@@ -43,12 +43,12 @@
 #     For instance, HipChat supports "/quote " to display messages in a fixed-width
 #     format. Thus, you can set "prefix": "/quote " to apply this formatter to
 #     fabric's output.
-#   - "role" (String) (Optional) Uses the [auth.coffee][1] module for restricting
-#     access via user configurable roles.
+#   - "role" (String) (Optional) Uses the [hubot-auth][1] module (requires
+#     installation) for restricting access via user configurable roles.
 #
 #     You can set "role" to "*" if you don't care about restricting access.
 #
-#   [1]: https://github.com/github/hubot/blob/master/src/scripts/auth.coffee
+#   [1]: https://github.com/hubot-scripts/hubot-auth
 #
 # Author:
 #   danriti
