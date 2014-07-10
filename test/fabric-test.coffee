@@ -110,3 +110,9 @@ describe 'fabric', ->
       done()
 
     adapter.receive(new TextMessage adminUser, "hubot fabric -Htest.example.com foo")
+
+  it 'hubot-auth module not installed', (done) ->
+    robot.auth = null
+    adapter.receive(new TextMessage adminUser, "hubot fabric -Htest.example.com df")
+    expect(cp.exec).to.be.calledOnce
+    done()
