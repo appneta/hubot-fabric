@@ -57,7 +57,11 @@ child_process = require('child_process')
 
 module.exports = (robot) ->
 
-  HUBOT_FABRIC_CONFIG = JSON.parse process.env.HUBOT_FABRIC_CONFIG
+  if process.env.HUBOT_FABRIC_CONFIG?
+    CONFIG = JSON.parse process.env.HUBOT_FABRIC_CONFIG
+  else
+    robot.logger.warning 'The HUBOT_FABRIC_CONFIG environment variable is not set'
+    CONFIG = {}
 
   exec = (msg, cmd) ->
     p = child_process.exec cmd, (error, stdout, stderr) ->
@@ -84,41 +88,38 @@ module.exports = (robot) ->
       msg.send formatOutput("exited: #{code}")
 
   formatOutput = (text) ->
-    if HUBOT_FABRIC_CONFIG.prefix?
-      return HUBOT_FABRIC_CONFIG.prefix + text
+    if CONFIG.prefix?
+      return CONFIG.prefix + text
     return text
 
   buildArgs = (task, host) ->
-    c = HUBOT_FABRIC_CONFIG
     args = []
 
-    args.push "-i#{c.auth}" if c.auth?
-    args.push "-f#{c.file}" if c.file?
+    args.push "-i#{CONFIG.auth}" if CONFIG.auth?
+    args.push "-f#{CONFIG.file}" if CONFIG.file?
     args.push "#{host}"
-    args.push "-u#{c.user}" if c.user?
-    args.push "-p#{c.pass}" if c.pass?
+    args.push "-u#{CONFIG.user}" if CONFIG.user?
+    args.push "-p#{CONFIG.pass}" if CONFIG.pass?
     args.push task
 
     return args
 
   buildCmd = (task, host) ->
-    c = HUBOT_FABRIC_CONFIG
-
-    cmd = "#{c.path}"
-    cmd += " -i#{c.auth}" if c.auth?
-    cmd += " -f#{c.file}" if c.file?
+    cmd = "#{CONFIG.path}"
+    cmd += " -i#{CONFIG.auth}" if CONFIG.auth?
+    cmd += " -f#{CONFIG.file}" if CONFIG.file?
     cmd += " #{host}"
-    cmd += " -u#{c.user}" if c.user?
-    cmd += " -p#{c.pass}" if c.pass?
+    cmd += " -u#{CONFIG.user}" if CONFIG.user?
+    cmd += " -p#{CONFIG.pass}" if CONFIG.pass?
     cmd += " #{task}"
 
     return cmd
 
   isTaskValid = (task) ->
-    if '*' in HUBOT_FABRIC_CONFIG.tasks
+    if '*' in CONFIG.tasks
       return true
     result = task.split(':')
-    return result[0] in HUBOT_FABRIC_CONFIG.tasks
+    return result[0] in CONFIG.tasks
 
   userHasRole = (user, role) ->
     if role is '*'
@@ -132,7 +133,7 @@ module.exports = (robot) ->
       return
 
     user = msg.envelope.user
-    role = HUBOT_FABRIC_CONFIG.role
+    role = CONFIG.role
 
     if not userHasRole(user, role)
       msg.send "Access denied. You must have this role to use this command: #{role}"
@@ -142,7 +143,7 @@ module.exports = (robot) ->
       cmd = buildCmd(task, host)
       exec(msg, cmd)
     else if method is 'spawn'
-      cmd = HUBOT_FABRIC_CONFIG.path
+      cmd = CONFIG.path
       args = buildArgs(task, host)
       spawn(msg, cmd, args)
 
@@ -153,4 +154,4 @@ module.exports = (robot) ->
     executeTask(msg, method, task, host)
 
   robot.respond /fabric tasks/i, (msg) ->
-    msg.send "Authorized fabric tasks: #{HUBOT_FABRIC_CONFIG.tasks}"
+    msg.send "Authorized fabric tasks: #{CONFIG.tasks}"
