@@ -2,7 +2,7 @@
 #   Execute Fabric tasks from Hubot
 #
 # Configuration:
-#   HUBOT_FABRIC_CONFIG
+#   HUBOT_FABRIC_CONFIG - A JSON string that describes your Fabric configuration.
 #
 # Commands:
 #   hubot fabric -Hhost.example.com uptime - execute the uptime fabric task on host.example.com
