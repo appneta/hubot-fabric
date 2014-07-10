@@ -122,7 +122,7 @@ module.exports = (robot) ->
     return result[0] in CONFIG.tasks
 
   userHasRole = (user, role) ->
-    if role is '*'
+    if role is '*' or not robot.auth?.hasRole?
       return true
 
     return robot.auth.hasRole(user, role)
