@@ -29,7 +29,10 @@
     "matchdep": "~0.1.2",
     "mocha": "*",
     "sinon": "*",
-    "sinon-chai": "*"
+    "sinon-chai": "*",
+    "hubot-auth": "~1.1.2",
+    "hubot": "^2.7.5",
+    "hubot-mock-adapter": "^1.0.0"
   },
   "main": "index.coffee",
   "scripts": {
