@@ -27,7 +27,7 @@
 #       "top"
 #     ],
 #     "prefix": "",
-#     "surround_with": "",
+#     "suffix": "",
 #     "role": "fabric"
 #   }
 #
@@ -45,15 +45,12 @@
 #     format. Thus, you can set "prefix": "/quote " to apply this formatter to
 #     fabric's output.
 #
-#     Note that you cannot combine "prefix" with "surround_with". If you define a
-#     prefix, the "surround_with" argument will be ignored.
-#   - "surround_with" (string) (Optional) Used to format fabric's output. Similar
-#     to "prefix", but allows an identical string to be used as both a prefix and a
-#     suffix.
+#   - "suffix" (string) (Optional) Used to format fabric's output. Similar
+#     to "prefix", but appends to the end of the output.
 #
-#     For instance, Slack supports "```preformatted```" to display messages in a
-#     fixed-width. Thus, you can set "surround_with": "```" to apply this formatter
-#     to fabric's output.
+#     Useful for services like Slack that support "```preformatted```" to display
+#     messages in a fixed-width. Thus, you can set both "prefix" and "suffix" to
+#     "```" to apply this formatting to fabric's output.
 #   - "role" (String) (Optional) Uses the [hubot-auth][1] module (requires
 #     installation) for restricting access via user configurable roles.
 #
@@ -102,8 +99,8 @@ module.exports = (robot) ->
     if CONFIG.prefix?
       return CONFIG.prefix + text
     # FIXME: doesn't work with very long messages in Slack
-    else if CONFIG.surround_with
-      return CONFIG.surround_with + text + CONFIG.surround_with
+    if CONFIG.suffix?
+      return text + CONFIG.suffix
     return text
 
   buildArgs = (tasks, host) ->
