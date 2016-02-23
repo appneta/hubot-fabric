@@ -27,6 +27,7 @@
 #       "top"
 #     ],
 #     "prefix": "",
+#     "suffix": "",
 #     "role": "fabric"
 #   }
 #
@@ -43,6 +44,13 @@
 #     For instance, HipChat supports "/quote " to display messages in a fixed-width
 #     format. Thus, you can set "prefix": "/quote " to apply this formatter to
 #     fabric's output.
+#
+#   - "suffix" (string) (Optional) Used to format fabric's output. Similar
+#     to "prefix", but appends to the end of the output.
+#
+#     Useful for services like Slack that support "```preformatted```" to display
+#     messages in a fixed-width. Thus, you can set both "prefix" and "suffix" to
+#     "```" to apply this formatting to fabric's output.
 #   - "role" (String) (Optional) Uses the [hubot-auth][1] module (requires
 #     installation) for restricting access via user configurable roles.
 #
@@ -90,9 +98,12 @@ module.exports = (robot) ->
   formatOutput = (text) ->
     if CONFIG.prefix?
       return CONFIG.prefix + text
+    # FIXME: doesn't work with very long messages in Slack
+    if CONFIG.suffix?
+      return text + CONFIG.suffix
     return text
 
-  buildArgs = (task, host) ->
+  buildArgs = (tasks, host) ->
     args = []
 
     args.push "-i#{CONFIG.auth}" if CONFIG.auth?
@@ -100,18 +111,19 @@ module.exports = (robot) ->
     args.push "#{host}"
     args.push "-u#{CONFIG.user}" if CONFIG.user?
     args.push "-p#{CONFIG.pass}" if CONFIG.pass?
-    args.push task
+    args.push tasks
 
     return args
 
-  buildCmd = (task, host) ->
+  buildCmd = (tasks, host) ->
+    tasks = tasks.join(" ")
     cmd = "#{CONFIG.path}"
     cmd += " -i#{CONFIG.auth}" if CONFIG.auth?
     cmd += " -f#{CONFIG.file}" if CONFIG.file?
     cmd += " #{host}"
     cmd += " -u#{CONFIG.user}" if CONFIG.user?
     cmd += " -p#{CONFIG.pass}" if CONFIG.pass?
-    cmd += " #{task}"
+    cmd += " #{tasks}"
 
     return cmd
 
@@ -127,10 +139,12 @@ module.exports = (robot) ->
 
     return robot.auth.hasRole(user, role)
 
-  executeTask = (msg, method, task, host) ->
-    if not isTaskValid(task)
-      msg.send "Unauthorized task: #{task}"
-      return
+  executeTask = (msg, method, tasks, host) ->
+    tasks = tasks.split(' ')
+    for singleTask in tasks
+      if not isTaskValid(singleTask)
+        msg.send "Unauthorized task: #{singleTask}"
+        return
 
     user = msg.envelope.user
     role = CONFIG.role
@@ -140,18 +154,23 @@ module.exports = (robot) ->
       return
 
     if method is 'exec'
-      cmd = buildCmd(task, host)
+      cmd = buildCmd(tasks, host)
       exec(msg, cmd)
     else if method is 'spawn'
       cmd = CONFIG.path
-      args = buildArgs(task, host)
+      args = buildArgs(tasks, host)
       spawn(msg, cmd, args)
 
-  robot.respond /fabric (exec|spawn)? ?(-H) ?([\w.\-_]+) (.+)/i, (msg) ->
+  robot.respond ///
+    fabric\s                           # fabric followed by a space
+    (exec|spawn)?\s?                   # exec and spawn are optional; default to exec
+    (-H ?[\w.\-_]+|host:[\w.\-_]+)+\s  # Host can be defined with -Hhostname or host:hostname
+    (.+)                               # The rest is tasks, which do get validated
+  ///i, (msg) ->
     method = msg.match[1] ||= 'exec'
-    host = msg.match[2] + msg.match[3]
-    task = msg.match[4]
-    executeTask(msg, method, task, host)
+    host = msg.match[2]
+    tasks = msg.match[3]
+    executeTask(msg, method, tasks, host)
 
   robot.respond /fabric tasks/i, (msg) ->
     msg.send "Authorized fabric tasks: #{CONFIG.tasks}"

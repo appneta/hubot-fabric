@@ -116,3 +116,22 @@ describe 'fabric', ->
     adapter.receive(new TextMessage adminUser, "hubot fabric -Htest.example.com df")
     expect(cp.exec).to.be.calledOnce
     done()
+
+  it 'exec multiple tasks', (done) ->
+    adapter.receive(new TextMessage roleUser, "hubot fabric exec -Htest.example.com df free:foo")
+    expect(cp.exec).to.be.calledOnce
+    expect(cp.exec.args[0][0]).to.contain 'df free:foo'
+    done()
+
+  it 'attempt exec one forbidden task of many allowed', (done) ->
+    adapter.on "send", (envelope, strings) ->
+      expect(cp.exec).to.be.not.called
+      expect(strings[0]).to.contain 'Unauthorized task: forbidden'
+      done()
+
+    adapter.receive(new TextMessage roleUser, "hubot fabric exec -Htest.example.com df free:foo forbidden")
+
+  it 'use host: instead of -H', (done) ->
+    adapter.receive(new TextMessage roleUser, "hubot fabric host:dev df")
+    expect(cp.exec.args[0]).to.contain '/my/fab -i/my/ssh-key.pem -f/my/fabfile.py host:dev -uuser -ppass df'
+    done()
