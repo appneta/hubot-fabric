@@ -20,7 +20,8 @@ CONFIG = """
     "free"
   ],
   "prefix": "",
-  "role": "fabric"
+  "role": "fabric",
+  "fabric_alias": "zarathustra"
 }
 """
 
@@ -134,4 +135,20 @@ describe 'fabric', ->
   it 'use host: instead of -H', (done) ->
     adapter.receive(new TextMessage roleUser, "hubot fabric host:dev df")
     expect(cp.exec.args[0]).to.contain '/my/fab -i/my/ssh-key.pem -f/my/fabfile.py host:dev -uuser -ppass df'
+    done()
+
+  it 'call fabric by alias', (done) ->
+    is_message_received = false
+    adapter.on "send", (envelope, strings) ->
+      expect(strings[0]).to.contain 'Authorized fabric tasks: df'
+      is_message_received = true
+
+    # not_fabric is not the alias or the default handle (fabric)
+    adapter.receive(new TextMessage adminUser, "hubot not_fabric tasks")
+    expect(is_message_received).to.not.be.true
+
+    # zarathustra is the alias, so hubot should respond
+    adapter.receive(new TextMessage adminUser, "hubot zarathustra tasks")
+    expect(is_message_received).to.be.true
+
     done()
