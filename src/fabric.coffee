@@ -17,6 +17,7 @@
 #     "path": "/my/virtualenv/bin/fab",
 #     "file": "/full/path/to/my/fabfile.py",
 #     "auth": "/full/path/to/my/ssh-key.pem",
+#     "fabric_alias": "fab",
 #     "user": "user",
 #     "pass": "pass",
 #     "tasks": [
@@ -34,6 +35,8 @@
 #   - "path" (String) Path to the fabric executable script
 #   - "file" (String) Path to the fabric file
 #   - "auth" (String) Path to the SSH private key file
+#   - "fabric_alias" (String) (Optional) The string to use for envoking Fabric.
+#      eg. "fab" or "fabric". Defaults to "fabric".
 #   - "user" (String) (Optional) User name to use when connecting to remote hosts
 #   - "pass" (String) (Optional) Password to use when connection to remote hosts
 #   - "tasks" (Array) Strings of fabric tasks that can be executed. Set to ["*"]
@@ -162,7 +165,7 @@ module.exports = (robot) ->
       spawn(msg, cmd, args)
 
   robot.respond ///
-    fabric\s                           # fabric followed by a space
+    #{CONFIG.fabric_alias}|fabric\s    # fabric followed by a space
     (exec|spawn)?\s?                   # exec and spawn are optional; default to exec
     (-H ?[\w.\-_]+|host:[\w.\-_]+)+\s  # Host can be defined with -Hhostname or host:hostname
     (.+)                               # The rest is tasks, which do get validated
@@ -172,5 +175,8 @@ module.exports = (robot) ->
     tasks = msg.match[3]
     executeTask(msg, method, tasks, host)
 
-  robot.respond /fabric tasks/i, (msg) ->
+  robot.respond ///
+    #{CONFIG.fabric_alias}|fabric\s
+    tasks
+  ///i, (msg) ->
     msg.send "Authorized fabric tasks: #{CONFIG.tasks}"
